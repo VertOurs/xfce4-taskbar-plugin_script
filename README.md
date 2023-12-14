@@ -1,0 +1,1 @@
+# xfce4-taskbar-plugin_script
