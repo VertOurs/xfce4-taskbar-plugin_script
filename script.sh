@@ -5,4 +5,4 @@ git clone https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin.git /tmp/x
 
 cd /tmp/xfce4-docklike-plugin
 
-sudo ./autogen.sh && sudo make && sudo make install
+sudo ./autogen.sh -- prefix=/usr && sudo make && sudo make install
