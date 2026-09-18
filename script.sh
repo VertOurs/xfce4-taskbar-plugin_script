@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: GPL-3.0-or-later
 set -euo pipefail
 
 PLUGIN_DIR="/tmp/xfce4-docklike-plugin"
@@ -32,7 +33,7 @@ rm -rf "$PLUGIN_DIR"
 git clone https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin.git "$PLUGIN_DIR"
 
 # Build and install (only the install step requires root)
-cd "$PLUGIN_DIR"
+cd "$PLUGIN_DIR" || exit 1
 ./autogen.sh --prefix=/usr
 make
 sudo make install
