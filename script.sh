@@ -1,35 +1,40 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-# internet connection check
-if ping -c 1 -q -W 8 "8.8.8.8" >/dev/null 2>&1; then
-    echo "connection active"
-else
-    echo "connection not active"
+PLUGIN_DIR="/tmp/xfce4-docklike-plugin"
+
+# Internet connection check
+if ! ping -c 1 -q -W 8 "8.8.8.8" >/dev/null 2>&1; then
+    echo "Error: no internet connection." >&2
     exit 1
 fi
 
-# Checks if current user has sudo rights
-if sudo -v; then
-    echo "Root privileges granted"
-else
-    echo "Root privileges denied"
+# Check sudo privileges
+if ! sudo true; then
+    echo "Error: sudo privileges required." >&2
     exit 1
 fi
 
-# nala is used if present on the system
+# Use nala if available, otherwise fall back to apt
 if command -v nala &>/dev/null; then
     package_manager="nala"
 else
     package_manager="apt"
 fi
 
-# Installs git and the necessary plugin dependencies
-sudo $package_manager install -y git build-essential libglib2.0-dev libgtk-3-dev libwnck-3-dev libxfce4ui-2-dev libxfce4panel-2.0-dev xfce4-dev-tools xorg-dev
+# Install build dependencies
+sudo "$package_manager" install -y \
+    git build-essential libglib2.0-dev libgtk-3-dev libwnck-3-dev \
+    libxfce4ui-2-dev libxfce4panel-2.0-dev xfce4-dev-tools xorg-dev
 
-# retrieves the plugin's code base locally
-git clone https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin.git /tmp/xfce4-docklike-plugin 
+# Clone plugin repository (clean up any leftover from a previous run)
+rm -rf "$PLUGIN_DIR"
+git clone https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin.git "$PLUGIN_DIR"
 
-# Build & Install
-cd /tmp/xfce4-docklike-plugin || exit
-sudo ./autogen.sh -- prefix=/usr && sudo make && sudo make install
-echo "installation is complete"
+# Build and install (only the install step requires root)
+cd "$PLUGIN_DIR"
+./autogen.sh --prefix=/usr
+make
+sudo make install
+
+echo "Installation complete."
