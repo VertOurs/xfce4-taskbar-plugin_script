@@ -1,33 +1,54 @@
-# xfce4-taskbar-plugin Installation Script for debian-based distro
+# xfce4-docklike-plugin Installer
 
-installation script to add the DockLike-TaskBar plugin to xfce desktop elements
+[![Lint](https://github.com/VertOurs/xfce4-taskbar-plugin_script/actions/workflows/lint.yml/badge.svg)](https://github.com/VertOurs/xfce4-taskbar-plugin_script/actions/workflows/lint.yml)
+[![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg)](LICENSE)
 
-## Description
+Bash installer script for [xfce4-docklike-plugin](https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin) on Debian-based distributions.
 
-this script allows you to install on debian-based distros the dependencies necessary for the plugin to function, but which are not natively integrated into the plugin installation procedure provided by the project.
-once this has been done, it fetches the latest version of the plugin and installs it.
+## Why this script exists
 
-this script supports nala, and uses it as a priority if it is installed, otherwise it uses apt by default.
+The xfce4-docklike-plugin project does not bundle the Debian build dependencies
+in its installation procedure. This script fills that gap: it installs the
+required development packages, fetches the latest source from upstream, and
+builds the plugin in one step.
+
+## Why not install from the package manager?
+
+xfce4-docklike-plugin is not available in the official Debian or Ubuntu
+repositories. Building from source is currently the only supported installation
+path on these distributions.
 
 ## Prerequisites
 
-- [x] the user must belong to the sudo group
-- [X] the machine must have an Internet connection
-- [X] apt must be installed
+- Debian-based distribution (Debian, Ubuntu, Linux Mint...)
+- Internet connection
+- `sudo` privileges
+- `apt` (pre-installed on all Debian-based systems)
 
-## Build & Install taskbar Plugin
+`nala` is used in place of `apt` if it is already installed on your system.
 
-* download repo code locally
-    * `git clone <https://github.com/VertOurs/xfce4-taskbar-plugin_script.git>`
-* in the script folder open a terminal
-* make script executable
-    * `chmod +x script.sh`
-* execute script
-    * `./script.sh`
-* the plugin is installed and available
+## Installation
 
-## Clean
+```bash
+git clone https://github.com/VertOurs/xfce4-taskbar-plugin_script.git
+cd xfce4-taskbar-plugin_script
+chmod +x script.sh
+./script.sh
+```
 
-In order to function correctly, this script installs git on al machine if it is not already present. Once the installation is complete, if you don't need this package, you must uninstall it manually.
+## Notes
 
-the script installs the plugin's git repository in /tmp. as this folder is temporary, no action is required to delete the git repository after use.
+**git as a build dependency.** The script installs `git` if it is not already
+present. If you do not need it after installation, remove it manually:
+
+```bash
+sudo apt remove git
+```
+
+**Temporary files.** The plugin source is cloned to `/tmp/xfce4-docklike-plugin`.
+This directory is cleaned automatically on rerun and cleared on system reboot.
+No manual cleanup is required.
+
+## License
+
+[GPL-3.0-or-later](LICENSE)
